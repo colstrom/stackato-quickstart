@@ -20,7 +20,7 @@ Initial Deployment
 
 _The repository here contains a sample application. You can use your own._
 
-1. `git clone git@github.com:colstrom/stackato-quickstart.git`
+1. `git clone https://github.com/colstrom/stackato-quickstart.git`
 2. `cd stackato-quickstart`
 3. `bundle pack`
 4. `stackato push`
