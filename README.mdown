@@ -1,0 +1,140 @@
+# stackato-quickstart
+
+6 steps from scatch to deployment, then some example iterations.
+
+Notes
+-----
+You should really change `quickstart.whatthefork.org` to something else. ^_~
+
+Client Setup
+------------
+
+_You should only need to do this once._
+
+1. Download the [Stackato Client](https://www.activestate.com/stackato/download_client)
+2. `stackato target api.whatthefork.org`
+3. `stackato login` (if you haven't before)
+
+Initial Deployment
+------------------
+
+_The repository here contains a sample application. You can use your own._
+
+1. `git clone git@github.com:colstrom/stackato-quickstart.git`
+2. `cd stackato-quickstart`
+3. `stackato push`
+
+Manual Setup
+------------
+
+_All of this is included in the quickstart repository, but if you want to do everything manually, you'll need the following files:_
+
+<details>
+  <summary>View Manual Steps</summary>
+[`Gemfile`](./Gemfile)
+
+```ruby
+source 'https://rubygems.org'
+
+gem 'sinatra'
+```
+
+_This example uses Sinatra, as one of the simplest starting points for a Ruby web application._
+
+- - -
+
+[`app.rb`](./app.rb)
+
+```ruby
+require 'sinatra'
+
+get '/' do
+  'Hello, Quickstart!'
+end
+```
+
+_This contains your application code, and can be called anything, but `app.rb` is a reasonable convention._
+
+- - -
+
+[`config.ru`](./config.ru)
+
+```ruby
+require_relative 'app'
+
+run Sinatra::Application
+```
+
+_This is only needed if you are using Rack. Since that's a common case, it's included in this example._
+
+- - -
+
+[`Procfile`](./Procfile)
+
+```yaml
+---
+web: bundle exec rackup --port $PORT
+```
+
+_This defines how to launch your application. If you omit this file, Stackato will try to figure it out for you._
+
+- - -
+
+[`manifest.yml`](./manifest.yml) tells Stackato about your application:
+
+```
+---
+applications:
+- name: quickstart
+```
+
+_The `name` of your application is how Stackato knows what you are trying to deploy. It is important._
+</details>
+
+Updating the Manifest
+---------------------
+
+Your application is deployed, but needs a URL where you can access it. With Stackato, this is defined in an application's `manifest.yml`.
+
+1. Add the following to [`manifest.yml`](/manifest.yml):
+```
+  url:
+    - quickstart.whatthefork.org
+```
+2. `stackato push`
+3. Visit [https://quickstart.whatthefork.org/] in your browser.
+
+Updating the Application
+------------------------
+
+Let's update the application code to do something more sophisticated than display a single fixed string.
+
+In `app.rb`, change this:
+```ruby
+get '/' do
+  'Hello, Quickstart'
+end
+```
+
+To this:
+```ruby
+get '/' do
+  erb :hello
+end
+```
+
+2. `stackato push`
+3. Visit [https://quickstart.whatthefork.org/] in your browser.
+
+Workflow
+--------
+1. Develop locally.
+2. When you're ready to deploy, `stackato push -n`.
+
+License
+-------
+[MIT](https://tldrlegal.com/license/mit-license)
+
+Contributors
+------------
+* [Chris Olstrom](https://colstrom.github.io/) | [e-mail](mailto:chris@olstrom.com) | [Twitter](https://twitter.com/ChrisOlstrom)
